@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="row">
+        <div id="input_hastag" class="col s12">
+            <form method="post" action="{% url 'login' %} ">
+                {% csrf_token %}
+                {{ form }}
+                <br>
+                <button class="btn waves-effect waves-light" type="submit">Login
+                    <i class="material-icons right">send</i>
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

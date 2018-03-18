@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_REDIRECT_URL = 'home'
+
 
 # Application definition
 
@@ -37,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'PEapp.apps.PeappConfig',
+    'PEapp',
 ]
+
+AUTH_USER_MODEL = 'PEapp.MyUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
