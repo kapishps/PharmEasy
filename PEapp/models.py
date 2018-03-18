@@ -5,7 +5,7 @@ from django.contrib.auth.models import (
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, date_of_birth, password=None):
+    def create_user(self, email, name, user_type, date_of_birth, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -16,6 +16,8 @@ class MyUserManager(BaseUserManager):
         user = self.model(
             email=self.normalize_email(email),
             date_of_birth=date_of_birth,
+            name=name,
+            user_type=user_type
         )
 
         user.set_password(password)
@@ -35,3 +37,52 @@ class MyUserManager(BaseUserManager):
         user.is_admin = True
         user.save(using=self._db)
         return user
+
+
+class MyUser(AbstractBaseUser):
+    email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,
+        unique=True,
+    )
+    name = models.CharField(
+        verbose_name='full name',
+        max_length=255
+    )
+    USER_TYPES = (
+        ('1', 'Patient'),
+        ('2', 'Doctor'),
+        ('3', 'Pharmacist'),
+    )
+    user_type = models.CharField(
+        verbose_name='user type',
+        max_length=2,
+        default='1',
+        choices=USER_TYPES
+    )
+    date_of_birth = models.DateField()
+
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+
+    objects = MyUserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name', 'date_of_birth']
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = 'User'
+
+    def __str__(self):
+        return self.email
+
+    def has_perm(self, perm, obj=None):
+        "Does the user have a specific permission?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    def has_module_perms(self, app_label):
+        "Does the user have permissions to view the app `app_label`?"
+        # Simplest possible answer: Yes, always
+        return True
