@@ -18,16 +18,16 @@ from django.urls import path
 from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth import views
-from PEapp.views import PrescriptionDetailView, MedicalRecordDetailView,home
+from PEapp.views import PrescriptionDetailView, MedicalRecordDetailView,home, signup
 from PEapp.admin import LoginForm, UserCreationForm
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
-    path('login/', auth_views.login, {'template_name': 'index.html', 'authentication_form': LoginForm}, name='login'),
+    path('login/', auth_views.login, {'template_name': 'login.html', 'authentication_form': LoginForm}, name='login'),
     path('logout/', auth_views.logout, {'next_page': '/'}, name='logout'),
-    # path('signup/', auth_views., {'template_name': 'index.html', 'authentication_form': UserCreationForm}, name='login'),
+    path('signup/', signup, name='signup'),
     # path('prescription/(?P<pk>[0-9]+)/$', login_required(PrescriptionDetailView.as_view()), name='prescription-detail'),
     # path('medicalrecord/(?P<pk>[0-9]+)/$', login_required(MedicalRecordDetailView.as_view()), name='medicalrecord-detail'),
 ]

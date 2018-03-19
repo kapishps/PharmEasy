@@ -8,10 +8,10 @@ from PEapp.models import MyUser, MedicalRecord, Prescription
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(label="UserName", max_length=30,
-                               widget=forms.TextInput(attrs={'class': 'form-control', 'name': 'username'}))
+    username = forms.CharField(label="Username", max_length=30,
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'name': 'username', 'placeholder': 'Enter Username', 'style' :'margin-left: 20px;margin-right: 20px;width:90%'}))
     password = forms.CharField(label="Password", max_length=30,
-                               widget=forms.PasswordInput(attrs={'class': 'form-control', 'name': 'password'}))
+                               widget=forms.PasswordInput(attrs={'class': 'form-control', 'name': 'password', 'placeholder': 'Enter Password', 'style' :'margin-left: 20px;margin-right: 20px;width:90%'}))
 
 
 class UserCreationForm(forms.ModelForm):
@@ -22,7 +22,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = MyUser
-        fields = ('email', 'date_of_birth', 'name', 'is_staff', 'user_type', 'user_name')
+        fields = ('email', 'name', 'user_name', 'user_type','date_of_birth')
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -39,6 +39,16 @@ class UserCreationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+    def __init__(self, *args, **kwargs):
+        super(UserCreationForm, self).__init__(*args, **kwargs)
+        # self.fields['user_type'].widget = forms.Select(choices=MyUser.USER_TYPES,attrs={'placeholder': 'sgs', 'style' :'margin-left: 20px;margin-right: 20px;width:100px'})
+        for field_name in self.fields:
+            field = self.fields.get(field_name)
+            if field:
+                if type(field.widget) in (forms.TextInput, forms.DateInput, forms.EmailInput, forms.PasswordInput):
+                    field.widget = forms.TextInput(attrs={'placeholder': field.label, 'style' :'margin-left: 20px;margin-right: 20px;width:90%'})
+                field.label = ''
 
 
 class UserChangeForm(forms.ModelForm):
