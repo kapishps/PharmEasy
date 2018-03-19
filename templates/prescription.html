@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 
 {% block body %}
-
-<div class="container">
     <div class="row">
-        {{ object.content }}
+        <div class="col s12 m8 offset-m2">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title grey-text text-darken-4">Patient: {{ object.user.name }},  Date: {{ object.created_at|date:"SHORT_DATE_FORMAT" }}</span>
+                    <p>{{ object.content }}</p>
+                </div>
+            </div>
+        </div>
     </div>
-
-</div>
 {% endblock body %}
