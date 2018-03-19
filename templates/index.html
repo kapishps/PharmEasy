@@ -1,15 +1,77 @@
 {% extends 'base.html' %}
+
+
 {% block body %}
     <div class="row">
-        <div id="input_hastag" class="col s12">
-            <form method="post" action="{% url 'login' %} ">
-                {% csrf_token %}
-                {{ form }}
-                <br>
-                <button class="btn waves-effect waves-light" type="submit">Login
-                    <i class="material-icons right">send</i>
-                </button>
-            </form>
-        </div>
+        {% if user.user_type == 'P' %}
+            <div class="col s12 m8 offset-m2">
+                <h4>Pending Approvals</h4>
+                {% for approval in pending_approvals %}
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="card-title grey-text text-darken-4">{{ forloop.counter }}) {{ approval.requester.get_user_type_display }} {{ approval.requester.name }} </span>
+                            <p><strong> {{ approval.requester.get_user_type_display }} {{ approval.requester.name }} </strong> has asked for your Approval to view your Prescription Dated: {{ approval.prescription_no.created_at|date:"SHORT_DATE_FORMAT" }}.
+                                If you want him to view your Prescription chose Approve</p>
+                        </div>
+                        <div class="card-action">
+                            <form action="{% url 'approve_approval' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="user" value="{{ user.id}}">
+                                <input type="hidden" name="approval_id" value="{{ approval.id}}">
+                                <button class="btn waves-effect waves-light" type="submit" style="float: right;margin-bottom: 10px;margin-right: 10px;">Approve
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% empty %}
+                    <li>Sorry, no prescriptions available.</li>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <div class="col s12 m8 offset-m2">
+                {% if approved_prescriptions  %}
+                <h4>Approved Patient Prescriptions</h4>
+                {% endif %}
+                {% for prescription in approved_prescriptions %}
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="card-title grey-text text-darken-4">{{ forloop.counter }}) Patient name: {{ prescription.user.name }}, Date: {{ prescription.created_at|date:"SHORT_DATE_FORMAT" }}</span>
+                            <p><strong> Patient {{ prescription.user.name }}</strong> has approved your request to view his Prescription</p>
+                        </div>
+                        <div class="card-action">
+                            <form action="{{ prescription.get_absolute_url }}">
+                                <button class="btn waves-effect waves-light"  style="float: right;margin-bottom: 10px;margin-right: 10px;">See Prescription
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                {% if available_prescriptions  %}
+                <h4>Available Prescriptions - Needs Approval</h4>
+                {% endif %}
+                {% for prescription in available_prescriptions %}
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="card-title grey-text text-darken-4">{{ forloop.counter }}) Patient name: {{ prescription.user.name }}, Date: {{ prescription.created_at|date:"SHORT_DATE_FORMAT" }}</span>
+{#                            <p><strong> Patient {{ prescription.user.name }}</strong> has approved your request to view his Prescription</p>#}
+                        </div>
+                        <div class="card-action">
+                            <form action="{% url 'create_approval' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="user" value="{{ user.id}}">
+                                <input type="hidden" name="prescription" value="{{ prescription.id }}">
+                                <button class="btn waves-effect waves-light" type="submit" style="float: right;margin-bottom: 10px;margin-right: 10px;">Ask For Approval
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

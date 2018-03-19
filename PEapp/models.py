@@ -99,6 +99,11 @@ class Prescription(models.Model):
     user = models.ForeignKey(to=MyUser,related_name='prescription_user',on_delete=models.DO_NOTHING)
     content = models.TextField()
 
+    class Meta:
+        permissions = (
+            ('view_task', 'View task'),
+        )
+
     def __str__(self):
         return self.user.email
 
@@ -112,9 +117,37 @@ class MedicalRecord(models.Model):
     user = models.ForeignKey(to=MyUser,related_name='medicalrecord_user',on_delete=models.DO_NOTHING,)
     content = models.TextField()
 
+    class Meta:
+        permissions = (
+            ('view_task', 'View task'),
+        )
+
     def __str__(self):
         return self.user.email
 
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse('medirecord-detail', args=[str(self.id)])
+        return reverse('medicalrecord-detail', args=[str(self.id)])
+
+
+class Approval(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    prescription_no = models.ForeignKey(to=Prescription,on_delete=models.DO_NOTHING,)
+
+    requester = models.ForeignKey(to=MyUser,on_delete=models.DO_NOTHING,)
+    # approver = models.ForeignKey(to=MyUser,on_delete=models.DO_NOTHING,)
+
+    STATUS_TYPES = (
+        ('PE', 'Pending'),
+        ('AP', 'Approved')
+    )
+    status = models.CharField(
+        max_length=2,
+        default='PE',
+        choices=STATUS_TYPES
+    )
+
+    def __str__(self):
+        return self.requester.email

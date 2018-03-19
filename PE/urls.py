@@ -18,7 +18,7 @@ from django.urls import path
 from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth import views
-from PEapp.views import PrescriptionDetailView, MedicalRecordDetailView,home, signup
+from PEapp.views import PrescriptionDetailView, MedicalRecordDetailView,home, signup,create_approval, approve_approval
 from PEapp.admin import LoginForm, UserCreationForm
 from django.contrib.auth import views as auth_views
 
@@ -28,6 +28,9 @@ urlpatterns = [
     path('login/', auth_views.login, {'template_name': 'login.html', 'authentication_form': LoginForm}, name='login'),
     path('logout/', auth_views.logout, {'next_page': '/'}, name='logout'),
     path('signup/', signup, name='signup'),
-    # path('prescription/(?P<pk>[0-9]+)/$', login_required(PrescriptionDetailView.as_view()), name='prescription-detail'),
-    # path('medicalrecord/(?P<pk>[0-9]+)/$', login_required(MedicalRecordDetailView.as_view()), name='medicalrecord-detail'),
+    path('prescription/<int:pk>', login_required(PrescriptionDetailView.as_view()), name='prescription-detail'),
+    path('medicalrecord/<int:id>', login_required(MedicalRecordDetailView.as_view()), name='medicalrecord-detail'),
+    path('create_approval/', create_approval, name='create_approval'),
+    path('approve_approval/', approve_approval, name='approve_approval'),
+
 ]

@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import AuthenticationForm,ReadOnlyPasswordHashField
 
-from PEapp.models import MyUser, MedicalRecord, Prescription
+from PEapp.models import MyUser, MedicalRecord, Prescription, Approval
 
 
 class LoginForm(AuthenticationForm):
@@ -100,6 +100,7 @@ class UserAdmin(BaseUserAdmin):
 admin.site.register(MyUser, UserAdmin)
 admin.site.register(Prescription)
 admin.site.register(MedicalRecord)
+admin.site.register(Approval)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)
