@@ -30,8 +30,14 @@ Username and Password Respectively
  - coolkps : Qwerty123 (admin)
 Few sample Prescriptions are also corresponding various patients for illustration purpose.
 ****
+**Main Features**
+ - Custom User model used for User profile
+ - Custom User SignUp view
+ -  Doctor/Pharmacist can ask for Patient's approval to view patient's prescription
+ - Patient can approve request of Doctor/Pharmacist
+****
 **ShortComings/Limitations**
  - For the sake of simplicity, content of Prescriptions and Medical Records are considered simple String.
  - Prescriptions can currently only be added through admin
- - Medical records can only be currently added through admin
+ - Medical records can currently only be added through admin
  - Doctors/Pharmacists can see user's prescription if accessed directly (through url), using `django-guardian` to fix this issue. Other Suggestions are welcome.
