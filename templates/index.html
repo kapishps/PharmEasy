@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
-
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
 
 {% block body %}
     <div class="row">
@@ -32,7 +34,7 @@
         {% else %}
             <div class="col s12 m8 offset-m2">
                 {% if approved_prescriptions  %}
-                <h4>Approved Patient Prescriptions</h4>
+                    <h4>Approved Patient Prescriptions</h4>
                 {% endif %}
                 {% for prescription in approved_prescriptions %}
                     <div class="card">
@@ -51,13 +53,13 @@
                 {% endfor %}
 
                 {% if available_prescriptions  %}
-                <h4>Available Prescriptions - Needs Approval</h4>
+                    <h4>Available Prescriptions - Needs Approval</h4>
                 {% endif %}
                 {% for prescription in available_prescriptions %}
                     <div class="card">
                         <div class="card-content">
                             <span class="card-title grey-text text-darken-4">{{ forloop.counter }}) Patient name: {{ prescription.user.name }}, Date: {{ prescription.created_at|date:"SHORT_DATE_FORMAT" }}</span>
-{#                            <p><strong> Patient {{ prescription.user.name }}</strong> has approved your request to view his Prescription</p>#}
+                            {#                            <p><strong> Patient {{ prescription.user.name }}</strong> has approved your request to view his Prescription</p>#}
                         </div>
                         <div class="card-action">
                             <form action="{% url 'create_approval' %}" method="post">
